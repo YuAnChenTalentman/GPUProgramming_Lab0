@@ -17,28 +17,8 @@ __global__ void Capitalize(char *input_gpu, int fsize) {
 		char ch = input_gpu[idx];
 		input_gpu[idx] = (ch>96&&ch<123)?(ch-32):ch;		
 		idx+=512;
-
-
 	}
 }
-__global__ void Swap_Pair(char *input_gpu, int fsize) {
-	int idx = (blockIdx.x * blockDim.x + threadIdx.x)*2;
-	while(idx<fsize)
-	{		
-		char aux;
-
-
-		aux = input_gpu[idx];
-		input_gpu[idx] = input_gpu[idx+1];
-		input_gpu[idx+1] = aux;
-
-		//input_gpu[idx] = (ch>96&&ch<123)?(ch-32):ch;		
-		idx+=1024;
-
-
-	}
-}
-
 
 
 int main(int argc, char **argv)
@@ -71,10 +51,7 @@ int main(int argc, char **argv)
 	// An example: transform the first 64 characters to '!'
 	// Don't transform over the tail
 	// And don't transform the line breaks
-	//Capitalize<<<16,32>>>(input_gpu, fsize);
-	Swap_Pair<<<16,32>>>(input_gpu,fsize);
+	Capitalize<<<16,32>>>(input_gpu, fsize);
 	puts(text_smem.get_cpu_ro());
-	int d =0;
-	scanf("%d",d);
 	return 0;
 }
